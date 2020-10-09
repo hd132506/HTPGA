@@ -14,9 +14,10 @@ class VerticesSpace:
         else:
             self.__space = vertices
     
-    # Class for building initial space
+    # Class for building initial space 
     def makeAdam(self):
-        # Vertices that contact with nothing
+        # For each space seperated by contact level, fill with just simple sequential numbers
+        # So that it can be an initial, seed chromosome(Adam)
         self.__space.append([i for i in range(1, self.__contactLevels[0]+1)])
         self.__space.append([i for i in range(self.__contactLevels[0]+1, sum(self.__contactLevels[:2])+1)])
         self.__space.append([i for i in range(sum(self.__contactLevels[:2])+1, self.__nVertices+1)])
