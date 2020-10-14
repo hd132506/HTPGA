@@ -42,9 +42,11 @@ def VerticesSpaceTest():
     # print(space.getspace())
 
 def HexagonTest():
-    # space = 
-    # pos = [(0, 0), ]
-    # hex = Hexagon()
+    space = VerticesSpace((8, 2))
+    pos = [(0, 0), (1, 0), (1, 1), (0, 6), (0, 4), (0, 2)]
+    hex = Hexagon(pos)
+    assertEqual(hex.getVerticesValues(space), [1, 9, 10, 7, 5, 3])
+    print('Hexagon class has been successfully created.')
     # hex.setPos([()])
     # hex.rotate(space)
     pass
@@ -54,4 +56,5 @@ def HexagonTest():
 
 
 VerticesSpaceTest()
+HexagonTest()
 print('All Tests Done!')
