@@ -54,6 +54,11 @@ class VerticesSpace:
     def setElement(self, pos, value):
         self.__space[pos[0]][pos[1]] = value
 
+    def swapElement(self, pos1, pos2):
+        tmp = self.__space[pos1[0]][pos1[1]]
+        self.__space[pos1[0]][pos1[1]] = self.__space[pos2[0]][pos2[1]]
+        self.__space[pos2[0]][pos2[1]] = tmp
+
     def setSpace(self, space):
         if type(space[0]) is list: # if space is given list of lists
             self.__space = space
