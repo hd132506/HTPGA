@@ -68,6 +68,7 @@ class VerticesSpace:
 
 """
 A class which consists of 6 tuples, which can perform operations to control VerticesSpace.
+Not used directly, only Tortoise class can create/access to this class(Would be contained in Tortoise)
 """
 class Hexagon:
     def __init__(self, pointerList):
@@ -87,4 +88,7 @@ class Hexagon:
 
 class Tortoise:
     def __init__(self, length):
-        self.__adjMat = [[0 for j in range(length)] for i in range(length)]
+        # For each Hexagon, it can have at most 6 adjacent hexagons
+        # adjMat[i][*] = j iff hexagon i is adjacent to hexagon j
+        self.__adjMat = [[] for i in range(length)]
+        self.__hex_list = []
