@@ -38,8 +38,9 @@ def VerticesSpaceTest():
     
 
     ## Swap test
-    # space.swapElement((0,1), (0, 2))
-    # print(space.getspace())
+    space.swapElement((0,1), (0, 2))
+    assertEqual(space.getspace(), [[2, 4, 3], [1, 5]])
+    print('A space can be swapped.')
 
 def HexagonTest():
     space = VerticesSpace((8, 2))
@@ -51,10 +52,16 @@ def HexagonTest():
     # hex.rotate(space)
     pass
 
+def TortoiseTest():
+    t = Tortoise(length=2)
+    # t.getHexagons()
+    # t.getAdjHexagons(0)
+
 # p = Problem(n_hex=4)
 # sol_space = p.solve()
 
 
 VerticesSpaceTest()
 HexagonTest()
+TortoiseTest()
 print('All Tests Done!')

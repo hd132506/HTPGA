@@ -86,5 +86,5 @@ class Hexagon:
         space.setElement(pos, value)
 
 class Tortoise:
-    def __init__(self,nHexagons):
-        self.__adjMat = [[0 for j in range(nHexagons)] for i in range(nHexagons)]
+    def __init__(self, length):
+        self.__adjMat = [[0 for j in range(length)] for i in range(length)]
