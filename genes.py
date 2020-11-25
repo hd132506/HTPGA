@@ -71,8 +71,11 @@ A class which consists of 6 tuples, which can perform operations to control Vert
 Not used directly, only Tortoise class can create/access to this class(Would be contained in Tortoise)
 """
 class Hexagon:
-    def __init__(self, pointerList):
+    def __init__(self, pointerList=None):
         self.__vertices = pointerList
+        if self.__vertices == None:
+            self.__vertices = [(0, 0) for i in range(6)]
+            
     def getVerticesValues(self, space, index=None):
         values = []
         for lv, pos in self.__vertices:
@@ -90,5 +93,10 @@ class Tortoise:
     def __init__(self, length):
         # For each Hexagon, it can have at most 6 adjacent hexagons
         # adjMat[i][*] = j iff hexagon i is adjacent to hexagon j
-        self.__adjMat = [[] for i in range(length)]
+        self.__adjMat = [[] for i in range(length)] # Might not be used
         self.__hex_list = []
+        self.__length = length
+
+    def build_hexes(self):
+        pass
+    
