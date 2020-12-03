@@ -5,9 +5,10 @@ vertices: List of 3 vectors
 nVertices: The number of whole vertices, sum(contactLevels)
 """
 class VerticesSpace:
-    def __init__(self, contactLevels, vertices=None):
-        self.__nVertices = sum(contactLevels)
-        self.__contactLevels = contactLevels
+    def __init__(self, length, vertices=None):
+        self.__length = length
+        self.__nVertices = 2*length*(length + 2)
+        self.__contactLevels = (2+4*length, 4*(length-1), 2*(length-1)**2)
         self.__space = []
 
         if (vertices is None) or (vertices == 'Adam'):
@@ -63,8 +64,12 @@ class VerticesSpace:
         if type(space[0]) is list: # if space is given list of lists
             self.__space = space
         else: # if space is given flat list
-            for i in range(len(self.__contactLevels)):
-                self.__space[i] = space[:self.__contactLevels[i]]
+            self.__space[0] = space[:self.__contactLevels[0]]
+            self.__space[1] = space[self.__contactLevels[0]+1:self.__contactLevels[0]+self.__contactLevels[1]]
+            self.__space[2] = space[-self.__contactLevels[2]:]
+
+    def __len__(self):
+        return self.__nVertices
 
 """
 A class which consists of 6 tuples, which can perform operations to control VerticesSpace.
@@ -85,6 +90,13 @@ class Hexagon:
     def getPositions(self):
         return self.__vertices
     
+    def getPosition(self, pos):
+        return self.__vertices[pos]
+
+    def setPosition(self, idx, position):
+        # Only used for initializing Tortoise
+        self.__vertices[idx] = position
+    
     def setVertex(self, space, loc, value):
         pos = self.__vertices[loc]
         space.setElement(pos, value)
@@ -94,9 +106,45 @@ class Tortoise:
         # For each Hexagon, it can have at most 6 adjacent hexagons
         # adjMat[i][*] = j iff hexagon i is adjacent to hexagon j
         self.__adjMat = [[] for i in range(length)] # Might not be used
-        self.__hex_list = []
+        self.__hexList = [[Hexagon() for j in range(length)] for i in range(length)]
         self.__length = length
+        self.__space = VerticesSpace(length)
+        self.buildHexes()
 
-    def build_hexes(self):
-        pass
+    def buildHexes(self):
+        space_ptr = [0, 0, 0]
+        
+        # Hexagon index 0, 1, 2
+        for i, row in enumerate(self.__hexList):
+            for j, hexagon in enumerate(row):
+                if i == 0:
+                    idx0_lv = 1
+                    idx1_lv = 0
+                    idx2_lv = 1
+                else:
+                    idx0_lv = 2
+                    idx1_lv = 2
+                    idx2_lv = 2
+                    if j == self.__length-1:
+                        idx1_lv = 1
+                if j == 0:
+                    idx0_lv -= 1
+                if j == self.__length-1:
+                    idx2_lv = 0
+
+                hexagon.setPosition(0, (idx0_lv, space_ptr[idx0_lv]))
+                space_ptr[idx0_lv] += 1
+
+                hexagon.setPosition(1, (idx1_lv, space_ptr[idx1_lv]))
+                space_ptr[idx1_lv] += 1
+
+                hexagon.setPosition(2, (idx2_lv, space_ptr[idx2_lv]))
+                if j == self.__length-1:
+                    space_ptr[idx2_lv] += 1
+
+    def getHexagons(self):
+        return self.__hexList
+
+    def __len__(self):
+        return self.__length
     
