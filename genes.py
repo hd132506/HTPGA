@@ -203,6 +203,7 @@ class Tortoise:
                 adjList.append(self.__hexList[row][col])
         return adjList
 
+    # Sum/mean of all the values in tortoise 
     def verticesSum(self, mean=False):
         space = self.__space.space()
         ret = sum(space[0]) + sum(space[1])*2 + sum(space[2])*3
