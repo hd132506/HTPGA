@@ -7,6 +7,10 @@ class GeneticAlgorithm:
         self.tortoise = [Tortoise(length) for _ in range(population)]
         # Additional parameters
 
+    @staticmethod
+    def fitness(tortoise):
+        pass
+
     def mutate(self):
         pass
 
