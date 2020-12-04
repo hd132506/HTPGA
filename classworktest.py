@@ -44,27 +44,26 @@ def VerticesSpaceTest():
     print('A space can be swapped.')
 
 def HexagonTest():
-    space = VerticesSpace(2)
     pos = [(0, 0), (1, 0), (1, 1), (0, 6), (0, 4), (0, 2)]
-    hex = Hexagon(pos)
-    assertEqual(hex.getVerticesValues(space), [1, 11, 12, 7, 5, 3])
+    hex = Hexagon(pointerList=pos)
+    hex.setPosition(2, (1, 2))
+    assertEqual(hex.getPosition(2), (1, 2))
     print('Hexagon class has been successfully created.')
-    # hex.setPos([()])
-    # hex.rotate(space)
-    pass
 
 def TortoiseTest():
     t = Tortoise(length=3)
+    assertEqual(len(t), 3)
     hl = t.getHexagons()
     print(hl)
     for r in hl:
         for c in r:
             print(c.getPositions())
-    # t.getAdjHexagons(0)
-    assertEqual(len(t), 3)
+    assertEqual(list(map(Hexagon.coordinate, t.adjHexagons(t.getHexagon(0, 0)))), [(0, 1), (1, 0)])
+    
+
     print('Tortoise class has been successfully created.')
 
-# p = Problem(n_hex=4)
+# p = Problem(length=4)
 # sol_space = p.solve()
 
 

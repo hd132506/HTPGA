@@ -30,7 +30,7 @@ class VerticesSpace:
             for nlv in self.__contactLevels:
                 self.__space.append([i for i in range(base, base+nlv)])
                 base += nlv
-
+    # Assuming Adam is created, space that has reversed order
     def makeEve(self):
         for i in range(len(self.__contactLevels)):
             self.__space[i].reverse()
@@ -68,30 +68,36 @@ class VerticesSpace:
             self.__space[1] = space[self.__contactLevels[0]+1:self.__contactLevels[0]+self.__contactLevels[1]]
             self.__space[2] = space[-self.__contactLevels[2]:]
 
-    def __len__(self):
+    def contactLevels(self):
+        return self.__contactLevels
+
+    def nVertices(self):
         return self.__nVertices
 
+    def __len__(self):
+        return self.__length
+
 """
-A class which consists of 6 tuples, which can perform operations to control VerticesSpace.
+A class including 6 tuples, which can perform operations to control VerticesSpace.
 Not used directly, only Tortoise class can create/access to this class(Would be contained in Tortoise)
 """
 class Hexagon:
-    def __init__(self, pointerList=None):
+    def __init__(self, coordinate=(0, 0), pointerList=None):
+        self.__coordinate=coordinate
         self.__vertices = pointerList
         if self.__vertices == None:
             self.__vertices = [(0, 0) for i in range(6)]
-            
-    def getVerticesValues(self, space, index=None):
-        values = []
-        for lv, pos in self.__vertices:
-            values.append(space.getElement(lv, pos))
-        return values
 
+    # Location info of the Hexagon in Tortoise
+    def coordinate(self):
+        return self.__coordinate
+
+    # Mapping info between each vertex of the Hexagon and VerticesSpace
     def getPositions(self):
         return self.__vertices
     
-    def getPosition(self, pos):
-        return self.__vertices[pos]
+    def getPosition(self, idx):
+        return self.__vertices[idx]
 
     def setPosition(self, idx, position):
         # Only used for initializing Tortoise
@@ -103,45 +109,99 @@ class Hexagon:
 
 class Tortoise:
     def __init__(self, length):
-        # For each Hexagon, it can have at most 6 adjacent hexagons
-        # adjMat[i][*] = j iff hexagon i is adjacent to hexagon j
-        self.__adjMat = [[] for i in range(length)] # Might not be used
-        self.__hexList = [[Hexagon() for j in range(length)] for i in range(length)]
+        self.__hexList = [[Hexagon((i, j)) for j in range(length)] for i in range(length)]
         self.__length = length
         self.__space = VerticesSpace(length)
-        self.buildHexes()
+        self.__buildHexes()
 
-    def buildHexes(self):
+    def __buildHexes(self):
         space_ptr = [0, 0, 0]
+        lv_of_idx = [0 for i in range(6)]
         
-        # Hexagon index 0, 1, 2
+        # Hexagon indices 0, 1, 2
         for i, row in enumerate(self.__hexList):
             for j, hexagon in enumerate(row):
-                if i == 0:
-                    idx0_lv = 1
-                    idx1_lv = 0
-                    idx2_lv = 1
-                else:
-                    idx0_lv = 2
-                    idx1_lv = 2
-                    idx2_lv = 2
+                # Deciding the level(in a context of VerticesSpace) of each vertex
+                if i == 0: # First row of tortoise
+                    lv_of_idx[:3] = [1, 0, 1]
+                else: # Other rows
+                    lv_of_idx[:3] = [2, 2, 2]
+                    if j == self.__length-1: # Last column not located in the first row
+                        lv_of_idx[1] = 1
+                if j == 0: # First column located in every row
+                    lv_of_idx[0] -= 1
+                if j == self.__length-1: # Last column located in every row
+                    lv_of_idx[2] = 0
+
+                hexagon.setPosition(0, (lv_of_idx[0], space_ptr[lv_of_idx[0]]))
+                space_ptr[lv_of_idx[0]] += 1
+
+                hexagon.setPosition(1, (lv_of_idx[1], space_ptr[lv_of_idx[1]]))
+                space_ptr[lv_of_idx[1]] += 1
+
+                hexagon.setPosition(2, (lv_of_idx[2], space_ptr[lv_of_idx[2]]))
+                if j == self.__length-1:
+                    space_ptr[lv_of_idx[2]] += 1
+
+        # Hexagon indices 3, 4, 5
+        for i, row in enumerate(self.__hexList[::-1]):
+            for j, hexagon in enumerate(row):
+                if i == 0: # Last row whose vertices haven't mapped yet 
+                    lv_of_idx[3:] = [1, 0, 1]
+                    if j == 0: # First column of the last row
+                        lv_of_idx[3] = 0
                     if j == self.__length-1:
-                        idx1_lv = 1
-                if j == 0:
-                    idx0_lv -= 1
-                if j == self.__length-1:
-                    idx2_lv = 0
+                        lv_of_idx[5] = 0
 
-                hexagon.setPosition(0, (idx0_lv, space_ptr[idx0_lv]))
-                space_ptr[idx0_lv] += 1
+                    hexagon.setPosition(3, (lv_of_idx[3], space_ptr[lv_of_idx[3]]))
+                    space_ptr[lv_of_idx[3]] += 1
 
-                hexagon.setPosition(1, (idx1_lv, space_ptr[idx1_lv]))
-                space_ptr[idx1_lv] += 1
+                    hexagon.setPosition(4, (lv_of_idx[4], space_ptr[lv_of_idx[4]]))
+                    space_ptr[lv_of_idx[4]] += 1
 
-                hexagon.setPosition(2, (idx2_lv, space_ptr[idx2_lv]))
-                if j == self.__length-1:
-                    space_ptr[idx2_lv] += 1
+                    hexagon.setPosition(5, (lv_of_idx[5], space_ptr[lv_of_idx[5]]))
+                    if j == self.__length-1:
+                        space_ptr[lv_of_idx[5]] += 1
+                    
+                else:
+                    if j == 0:
+                        hexagon.setPosition(3, (0, space_ptr[0]))
+                        space_ptr[0] += 1
+                    else:
+                        hexagon.setPosition(3, row[j-1].getPosition(5))
 
+                    below = self.__hexList[-i][j]
+                    hexagon.setPosition(4, below.getPosition(0))
+                    hexagon.setPosition(5, below.getPosition(1))
+
+    # Sum of all values in a single hexagon
+    def singleHexagonValueSum(self, hexagon):
+        return sum(self.getHexagonValues(hexagon))
+
+    # List of 6 values in a hexagon
+    def getHexagonValues(self, hexagon):
+        posList = hexagon.getPositions()
+        values = []
+        for lv, pos in posList:
+            values.append(self.__space.getElement(lv, pos))
+        return values
+
+    # List of adjacent hexagon objects
+    def adjHexagons(self, hexagon):
+        adjList = []
+        r, c = hexagon.coordinate()
+        inBound = lambda r, c: (0 <= r) and (r < self.__length) and (0 <= c) and (c < self.__length)
+        coordinates = [(r-1, c), (r-1, c+1), (r, c-1), (r, c+1), (r+1, c-1), (r+1, c)]
+        for row, col in coordinates:
+            if inBound(row, col):
+                adjList.append(self.__hexList[row][col])
+        return adjList
+
+    # Hexagon object given its row and column index
+    def getHexagon(self, row, col):
+        return self.__hexList[row][col]
+
+    # List(matrix) of all hexagons
     def getHexagons(self):
         return self.__hexList
 
