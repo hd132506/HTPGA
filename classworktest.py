@@ -15,12 +15,6 @@ def VerticesSpaceTest():
     ## Space construction test
     space = VerticesSpace(2)
     assertEqual(space.getnVertices(), 16)
-    # assertEqual(space.space(), [[1, 2, 3, 4, 5], [6, 7, 8]])
-    # space = VerticesSpace((5, 3, 2))
-    # assertEqual(space.getnVertices(), sum((5, 3, 2)))
-    # assertEqual(space.space(), [[1, 2, 3, 4, 5], [6, 7, 8], [9, 10]])
-    # space = VerticesSpace((5, 3, 2), 'Eve')
-    # assertEqual(space.space(), [list(reversed([1, 2, 3, 4, 5])), list(reversed([6, 7, 8])), list(reversed([9, 10]))])
     print('Space has been successfully constructed.')
 
     ## Set element test
