@@ -46,7 +46,7 @@ class VerticesSpace:
         return self.__nVertices
     def getcontactLevels(self):
         return self.__contactLevels
-    def getspace(self):
+    def space(self):
         return self.__space
     def getElement(self, lv, pos):
         return self.__space[lv][pos]
@@ -100,18 +100,24 @@ class Hexagon:
         return self.__vertices[idx]
 
     def setPosition(self, idx, position):
-        # Only used for initializing Tortoise
+        # For initializing Tortoise
         self.__vertices[idx] = position
     
     def setVertex(self, space, loc, value):
         pos = self.__vertices[loc]
         space.setElement(pos, value)
 
+
+"""
+Actual class that GA would directly instantiate and call its methods.
+1. Builds initial Vertices Space.
+2. Builds a matrix structure consisted of Hexagons then maps each other.
+"""
 class Tortoise:
-    def __init__(self, length):
+    def __init__(self, length, spaceType=None):
         self.__hexList = [[Hexagon((i, j)) for j in range(length)] for i in range(length)]
         self.__length = length
-        self.__space = VerticesSpace(length)
+        self.__space = VerticesSpace(length, spaceType)
         self.__buildHexes()
 
     def __buildHexes(self):
@@ -196,6 +202,11 @@ class Tortoise:
             if inBound(row, col):
                 adjList.append(self.__hexList[row][col])
         return adjList
+
+    def verticesSum(self, mean=False):
+        space = self.__space.space()
+        ret = sum(space[0]) + sum(space[1])*2 + sum(space[2])*3
+        return ret / (self.__length**2) if mean else ret
 
     # Hexagon object given its row and column index
     def getHexagon(self, row, col):
