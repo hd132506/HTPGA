@@ -41,13 +41,17 @@ class VerticesSpace:
             flat += vector
         return flat
 
-    # Getter
+    # The number of whole vertices
     def getnVertices(self):
         return self.__nVertices
+
     def getcontactLevels(self):
         return self.__contactLevels
+
     def space(self):
         return self.__space
+
+    # Given contact level and index
     def getElement(self, lv, pos):
         return self.__space[lv][pos]
 
