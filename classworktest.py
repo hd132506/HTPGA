@@ -15,6 +15,7 @@ def VerticesSpaceTest():
     ## Space construction test
     space = VerticesSpace(2)
     assertEqual(space.getnVertices(), 16)
+    assert space.verify()
     print('Space has been successfully constructed.')
 
     ## Set element test
@@ -35,6 +36,7 @@ def VerticesSpaceTest():
     ## Swap test
     space.swapElement((0,1), (0, 2))
     assertEqual(space.space(), [[2, 3, 1, 4, 5, 6, 7, 8, 9, 10], [11, 2, 13, 14], [16, 15]])
+    assert space.verify() == False
     print('A space can be swapped.')
 
 def HexagonTest():

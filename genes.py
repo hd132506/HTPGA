@@ -78,6 +78,16 @@ class VerticesSpace:
     def nVertices(self):
         return self.__nVertices
 
+    # Verify if the elements form a permutation from 0 to nVertices.
+    def verify(self):
+        hasAlready = [False for _ in range(self.__nVertices+1)]
+        for lv in self.__space:
+            for elem in lv:
+                if hasAlready[elem]:
+                    return False
+                hasAlready[elem] = True
+        return True
+
     def __len__(self):
         return self.__length
 
