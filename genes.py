@@ -209,6 +209,15 @@ class Tortoise:
         ret = sum(space[0]) + sum(space[1])*2 + sum(space[2])*3
         return ret / (self.__length**2) if mean else ret
 
+    # Variance of hexagons, which might be used for calculating fitness
+    def variance(self):
+        mu = self.verticesSum(mean=True)
+        aggr = 0
+        for r in self.__hexList:
+            for hexagon in r:
+                aggr += (self.singleHexagonValueSum(hexagon) - mu)**2
+        return aggr / (self.__length)**2
+
     # Hexagon object given its row and column index
     def getHexagon(self, row, col):
         return self.__hexList[row][col]
