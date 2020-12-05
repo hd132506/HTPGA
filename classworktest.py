@@ -53,8 +53,10 @@ def TortoiseTest():
         for c in r:
             print(c.getPositions())
     assertEqual(list(map(Hexagon.coordinate, t.adjHexagons(t.getHexagon(0, 0)))), [(0, 1), (1, 0)])
-    
-
+    h = t.getHexagon(1, 2)
+    assertEqual(t.getHexagonValues(h), [26, 18, 6, 29, 30, 20])
+    assertEqual(t.singleHexagonValueSum(h), sum([26, 18, 6, 29, 30, 20]))
+    print(t.verticesSum(mean=True))
     print('Tortoise class has been successfully created.')
 
 # p = Problem(length=4)
