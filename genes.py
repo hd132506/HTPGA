@@ -97,7 +97,7 @@ Not used directly, only Tortoise class can create/access to this class(Would be 
 """
 class Hexagon:
     def __init__(self, coordinate=(0, 0), pointerList=None):
-        self.__coordinate=coordinate
+        self.__coordinate = coordinate
         self.__vertices = pointerList
         if self.__vertices == None:
             self.__vertices = [(0, 0) for i in range(6)]
