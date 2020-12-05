@@ -117,6 +117,7 @@ class Hexagon:
         # For initializing Tortoise
         self.__vertices[idx] = position
     
+    # Would be abandoned
     def setVertex(self, space, loc, value):
         pos = self.__vertices[loc]
         space.setElement(pos, value)
