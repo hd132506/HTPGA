@@ -127,6 +127,7 @@ class Hexagon:
 Actual class that GA would directly instantiate and call its methods.
 1. Builds initial Vertices Space.
 2. Builds a matrix structure consisted of Hexagons then maps each other.
+This helps getting some features or insights like average values, neighboring elements from VerticesSpace through Hexagon.
 """
 class Tortoise:
     def __init__(self, length, spaceType=None):
