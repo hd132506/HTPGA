@@ -3,7 +3,7 @@ GA for solving HTP
 
 ## Concept
 
-![concept](.\img\concept.png)
+![concept](img/concept.png)
 
 - NxN개 육각형의 마름모꼴 모양
 - 1차원 배열 세 개 형태의 표현형
@@ -33,7 +33,7 @@ GA for solving HTP
 - length를 파라미터로 받아 length*length 크기의 VerticesSpace와 대응되는 Hexagon 클래스들을 구성하는 클래스
 - 지역적으로 인접한 값들, 육각형 값의 합/평균/분산 등 유전 연산을 돕는 operation 제공
 
-![class](.\img\class.png)
+![class](img/class.png)
 
 
 
