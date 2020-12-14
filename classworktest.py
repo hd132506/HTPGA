@@ -1,4 +1,5 @@
 from genes import *
+from algorithm_skeleton import *
 
 """
 This code performs tests defining requirements that each method must achieve, 
@@ -32,12 +33,20 @@ def VerticesSpaceTest():
     assertEqual(space.space(), [[2, 1, 3, 4, 5, 6, 7, 8, 9, 10], [11, 2, 13, 14], [16, 15]])
     print('A space can be set by also a list.')
     
+    ## Flatten test
+    assertEqual(space.flatten(), [2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 2, 13, 14, 16, 15])
+
 
     ## Swap test
     space.swapElement((0,1), (0, 2))
     assertEqual(space.space(), [[2, 3, 1, 4, 5, 6, 7, 8, 9, 10], [11, 2, 13, 14], [16, 15]])
     assert space.verify() == False
     print('A space can be swapped.')
+
+    ## Transformation test
+    assertEqual(space.transformCoord(10), (1, 0))
+    assertEqual(space.transformCoord(9), (0, 9))
+    assertEqual(space.transformCoord(15), (2, 1))
 
 def HexagonTest():
     pos = [(0, 0), (1, 0), (1, 1), (0, 6), (0, 4), (0, 2)]
@@ -50,7 +59,6 @@ def TortoiseTest():
     t = Tortoise(length=3)
     assertEqual(len(t), 3)
     hl = t.getHexagons()
-    print(hl)
     for r in hl:
         for c in r:
             print(c.getPositions())
@@ -58,14 +66,15 @@ def TortoiseTest():
     h = t.getHexagon(1, 2)
     assertEqual(t.getHexagonValues(h), [26, 18, 6, 29, 30, 20])
     assertEqual(t.singleHexagonValueSum(h), sum([26, 18, 6, 29, 30, 20]))
-    print(t.verticesSum(mean=True))
+    print('mean:', t.verticesSum(mean=True))
     print('Tortoise class has been successfully created.')
 
-# p = Problem(length=4)
-# sol_space = p.solve()
+def GATest():
+    p = GeneticAlgorithm(length=2, population=10)
 
 
 VerticesSpaceTest()
 HexagonTest()
 TortoiseTest()
+GATest()
 print('All Tests Done!')
