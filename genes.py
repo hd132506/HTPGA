@@ -41,6 +41,13 @@ class VerticesSpace:
             flat += vector
         return flat
 
+    # Fit the shape of flat vector to the VerticesSpace's
+    def fitShape(self, flatVector):
+        fitSpace = [flatVector[:self.__contactLevels[0]], \
+                    flatVector[self.__contactLevels[0]:self.__contactLevels[0]+self.__contactLevels[1]], \
+                    flatVector[-self.__contactLevels[2]:]]
+        return fitSpace
+
     # The number of whole vertices
     def getnVertices(self):
         return self.__nVertices
@@ -52,25 +59,45 @@ class VerticesSpace:
         return self.__space
 
     # Given contact level and index
-    def getElement(self, lv, pos):
+    def getElement(self, lv, pos=None):
+        if pos == None: # parameter is passed by tuple
+            return self.__space[lv[0]][lv[1]]
         return self.__space[lv][pos]
+
+    # Transform flatten location to (level, position) in the space or vice versa
+    def transformCoord(self, pos):
+        if type(pos) == tuple:
+            return None # TODO: implement 
+        else: # type(pos) == int
+            contlv = 0
+            if pos >= self.__contactLevels[0]:
+                contlv += 1
+                pos -= self.__contactLevels[0]
+                if pos >= self.__contactLevels[1]:
+                    contlv += 1
+                    pos -= self.__contactLevels[1]
+            return (contlv, pos)
 
     # Setter / modifier
     def setElement(self, pos, value):
         self.__space[pos[0]][pos[1]] = value
 
     def swapElement(self, pos1, pos2):
+        if type(pos1) != tuple:
+            pos1 = self.transformCoord(pos1)
+        if type(pos2) != tuple:
+            pos2 = self.transformCoord(pos2)
+        
         tmp = self.__space[pos1[0]][pos1[1]]
         self.__space[pos1[0]][pos1[1]] = self.__space[pos2[0]][pos2[1]]
         self.__space[pos2[0]][pos2[1]] = tmp
+
 
     def setSpace(self, space):
         if type(space[0]) is list: # if space is given list of lists
             self.__space = space
         else: # if space is given flat list
-            self.__space[0] = space[:self.__contactLevels[0]]
-            self.__space[1] = space[self.__contactLevels[0]+1:self.__contactLevels[0]+self.__contactLevels[1]]
-            self.__space[2] = space[-self.__contactLevels[2]:]
+            self.__space = self.fitShape(space)
 
     def contactLevels(self):
         return self.__contactLevels
@@ -242,6 +269,49 @@ class Tortoise:
     def getHexagons(self):
         return self.__hexList
 
+    def getSpace(self):
+        return self.__space
+
+    def nVertices(self):
+        return self.__space.nVertices()
+
     def __len__(self):
         return self.__length
-    
+
+    def show(self, padding=2):
+        p_str = lambda p: f'{"":{p}}'
+        hexagon_value = lambda hexagon, idx: self.__space.getElement(hexagon.getPosition(idx))
+
+        print(p_str(padding), end='')
+        for hexagon in self.__hexList[0]:
+            value = hexagon_value(hexagon, 1)
+            print(f'{value:{padding}}', end=p_str(padding))
+        print('')
+
+        for idx, row in enumerate(self.__hexList):
+            if idx > 0:
+                print(p_str(idx*padding), end='')
+            
+            value = hexagon_value(row[0], 0)
+            print(f'{value:{padding}}', end=p_str(padding))
+            for hexagon in row:
+                value = hexagon_value(hexagon, 2)
+                print(f'{value:{padding}}', end=p_str(padding))
+            print('')
+
+            if idx > 0:
+                print(p_str(idx*padding), end='')
+
+            value = hexagon_value(row[0], 3)
+            print(f'{value:{padding}}', end=p_str(padding))
+            for hexagon in row:
+                value = hexagon_value(hexagon, 5)
+                print(f'{value:{padding}}', end=p_str(padding))
+            print('')
+
+        print(p_str((self.__length)*padding), end='')
+        for hexagon in self.__hexList[-1]:
+            value = hexagon_value(hexagon, 4)
+            print(f'{value:{padding}}', end=p_str(padding))
+        print('')
+
